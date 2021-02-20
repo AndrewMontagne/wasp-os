@@ -22,6 +22,7 @@ DIGITS = (
 )
 
 MONTH = 'JanFebMarAprMayJunJulAugSepOctNovDec'
+DAY   = 'MONTUEWEDTHUFRISATSUN'
 
 class ClockApp():
     """Simple digital clock application."""
@@ -76,7 +77,7 @@ class ClockApp():
 
             # Clear the display and draw that static parts of the watch face
             draw.fill()
-            draw.blit(digits.clock_colon, 2*48, 80, fg=mid)
+            draw.blit(digits.clock_colon, 115, 70, fg=mid)
 
             # Redraw the status bar
             wasp.system.bar.draw()
@@ -94,14 +95,17 @@ class ClockApp():
         month = now[1] - 1
         month = MONTH[month*3:(month+1)*3]
 
+        day = now[6]
+        day = DAY[day*3:(day+1)*3]
+
         # Draw the changeable parts of the watch face
-        draw.blit(DIGITS[now[4]  % 10], 4*48, 80, fg=hi)
-        draw.blit(DIGITS[now[4] // 10], 3*48, 80, fg=lo)
-        draw.blit(DIGITS[now[3]  % 10], 1*48, 80, fg=hi)
-        draw.blit(DIGITS[now[3] // 10], 0*48, 80, fg=lo)
+        draw.blit(DIGITS[now[4]  % 10], 194, 70, fg=hi)
+        draw.blit(DIGITS[now[4] // 10], 138, 70, fg=lo)
+        draw.blit(DIGITS[now[3]  % 10], 57, 70, fg=hi)
+        draw.blit(DIGITS[now[3] // 10], 0, 70, fg=lo)
         draw.set_color(hi)
-        draw.string('{} {} {}'.format(now[2], month, now[0]),
-                0, 180, width=240)
+        draw.string('{:02d}/{:02d} {}'.format(now[2], now[1], day),
+                60, 8, width=120)
 
         # Record the minute that is currently being displayed
         self._min = now[4]
