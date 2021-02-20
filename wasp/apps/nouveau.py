@@ -118,13 +118,13 @@ class NouveauApp():
         b'.G'
         b'\xff\xff\xff\xb4\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1'
         b'\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1'
-        b'\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1'
-        b'\x1d\xd1\x1d\xd1\x07A@\x81B\xc5B\x80\xfe\x81\x0b\xd1'
-        b'\x05\x81\xcdA\t\xd1\x03\x81\xd1A\x07\xd1\x02\x81\xd3A'
-        b'\x06\xd1\x01\x81\xd5A\x05\xd1\x01\xd7A\x04\xea\x81\x03\xeb'
-        b'\x03\xebA\x02\xec\x02\xecA\x01\xecA\x01\xed\x01\xed\x81'
-        b'\xedA\xedA\xff\x03A\x81\x02\x81A\xe7\x81\x06\x81\xe5'
-        b'\x81\x08\x81\xe3A\nA\xe2\x81\n\x81\xd1\x1d\xd1\x1d\xd1'
+        b'\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x07A@\x81B\xc5'
+        b'B\x80\xfe\x81\x0b\xd1\x05\x81\xcdA\t\xd1\x03\x81\xd1A'
+        b'\x07\xd1\x02\x81\xd3A\x06\xd1\x01\x81\xd5A\x05\xd1\x01\xd7'
+        b'A\x04\xea\x81\x03\xeb\x03\xebA\x02\xec\x02\xecA\x01\xec'
+        b'A\x01\xed\x01\xed\x81\xedA\xedA\xff\x03A\x81\x02\x81'
+        b'A\xe7\x81\x06\x81\xe5\x81\x08\x81\xe3A\nA\xe2\x81\n'
+        b'\x81\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1'
         b'\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1\x1d\xd1'
     )
 
@@ -295,19 +295,32 @@ class NouveauApp():
     def _render_digit(self, new, old, x, y, fg):
         draw = wasp.watch.drawable
 
-        if new in (1, 4, 6, 7):
+        # Don't re-render digits if they're the same!
+        if old == new:
+            return
+
+        # These digits take up the full frame, just draw them
+        if new in (1, 4, 7):
             draw.blit(self.digits[new], x, y, fg=fg)
             return
+
+        # Did the old digit have a round top or bottom?
         old_round_top = old in [0, 2, 3, 8, 9]
         old_round_bot = old in [0, 3, 5, 6, 8]
+
+        # Does the new digit have a round top or bottom?
         new_round_top = new in [0, 2, 3, 8, 9]
         new_round_bot = new in [0, 3, 5, 6, 8]
+
+        # Does the body of the main digit start at the top of the frame?
         new_start_top = new in [5, 6]
 
         if new_round_top and not old_round_top:
             draw.blit(self.digit_top, x, y, fg = fg)
+
         if new_round_bot and not old_round_bot:
             draw.blit(self.digit_bottom, x, y + 71, fg=fg)
+
         if new_start_top:
             draw.blit(self.digits[new], x, y, fg=fg)
         else:
@@ -338,7 +351,6 @@ class NouveauApp():
             draw.blit(self.digit_dot, 114, 86, fg=mid)
             draw.blit(self.digit_dot, 114, 144, fg=mid)
 
-
             # Redraw the status bar
             wasp.system.bar.draw()
         else:
@@ -368,6 +380,7 @@ class NouveauApp():
         self.mins_tens = new
 
         new = now[4] % 10
+        new = 6
         self._render_digit(new, self.mins_ones, 193, 70, hi)
         self.mins_ones = new
                 
