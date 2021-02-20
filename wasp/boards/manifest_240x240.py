@@ -13,6 +13,7 @@ manifest = (
     'apps/haiku.py',
     'apps/heart.py',
     'apps/musicplayer.py',
+    'apps/nouveau.py',
     'apps/launcher.py',
     'apps/pager.py',
     'apps/play2048.py',

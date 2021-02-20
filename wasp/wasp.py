@@ -28,6 +28,7 @@ from apps.settings import SettingsApp
 from apps.steps import StepCounterApp
 from apps.software import SoftwareApp
 from apps.stopwatch import StopwatchApp
+from apps.nouveau import NouveauApp
 
 class EventType():
     """Enumerated interface actions.
